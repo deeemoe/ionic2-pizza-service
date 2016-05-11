@@ -414,7 +414,7 @@ var PizzaApp = (function () {
     return PizzaApp;
 }());
 
-},{"./+cart/index":2,"./+order/index":7,"./about/index":10,"./shared/index":12,"ionic-angular":349,"ionic-native":371,"rxjs/add/operator/distinctUntilChanged":431}],12:[function(require,module,exports){
+},{"./+cart/index":2,"./+order/index":7,"./about/index":10,"./shared/index":12,"ionic-angular":349,"ionic-native":371,"rxjs/add/operator/distinctUntilChanged":433}],12:[function(require,module,exports){
 "use strict";
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -480,8 +480,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('angular2/core');
 var http_1 = require('angular2/http');
 require('rxjs/add/operator/map');
-require('rxjs/add/operator/filter');
-require('rxjs/add/operator/first');
+require('rxjs/add/operator/delay');
 var PizzaService = (function () {
     function PizzaService(http) {
         this.http = http;
@@ -489,6 +488,7 @@ var PizzaService = (function () {
     PizzaService.prototype.getPizzas = function () {
         return this.http
             .get('assets/pizza.json')
+            .delay(2000)
             .map(function (res) { return res.json(); });
     };
     PizzaService.prototype.getPizza = function (id) {
@@ -512,7 +512,7 @@ var PizzaService = (function () {
 }());
 exports.PizzaService = PizzaService;
 
-},{"angular2/core":18,"angular2/http":19,"rxjs/add/operator/filter":432,"rxjs/add/operator/first":433,"rxjs/add/operator/map":434}],16:[function(require,module,exports){
+},{"angular2/core":18,"angular2/http":19,"rxjs/add/operator/delay":432,"rxjs/add/operator/map":434}],16:[function(require,module,exports){
 'use strict';"use strict";
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -27729,7 +27729,7 @@ var EventEmitter = (function (_super) {
     return EventEmitter;
 }(Subject_1.Subject));
 exports.EventEmitter = EventEmitter;
-},{"angular2/src/facade/lang":202,"angular2/src/facade/promise":204,"rxjs/Observable":426,"rxjs/Subject":428,"rxjs/observable/PromiseObservable":436,"rxjs/operator/toPromise":441}],195:[function(require,module,exports){
+},{"angular2/src/facade/lang":202,"angular2/src/facade/promise":204,"rxjs/Observable":427,"rxjs/Subject":429,"rxjs/observable/PromiseObservable":436,"rxjs/operator/toPromise":440}],195:[function(require,module,exports){
 'use strict';"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -29240,7 +29240,7 @@ var JSONPBackend_ = (function (_super) {
     return JSONPBackend_;
 }(JSONPBackend));
 exports.JSONPBackend_ = JSONPBackend_;
-},{"../base_response_options":210,"../enums":211,"../interfaces":215,"../static_response":217,"./browser_jsonp":205,"angular2/core":18,"angular2/src/facade/exceptions":199,"angular2/src/facade/lang":202,"rxjs/Observable":426}],208:[function(require,module,exports){
+},{"../base_response_options":210,"../enums":211,"../interfaces":215,"../static_response":217,"./browser_jsonp":205,"angular2/core":18,"angular2/src/facade/exceptions":199,"angular2/src/facade/lang":202,"rxjs/Observable":427}],208:[function(require,module,exports){
 'use strict';"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -29369,7 +29369,7 @@ var XHRBackend = (function () {
     return XHRBackend;
 }());
 exports.XHRBackend = XHRBackend;
-},{"../base_response_options":210,"../enums":211,"../headers":212,"../http_utils":214,"../static_response":217,"./browser_xhr":206,"angular2/core":18,"angular2/src/facade/lang":202,"rxjs/Observable":426}],209:[function(require,module,exports){
+},{"../base_response_options":210,"../enums":211,"../headers":212,"../http_utils":214,"../static_response":217,"./browser_xhr":206,"angular2/core":18,"angular2/src/facade/lang":202,"rxjs/Observable":427}],209:[function(require,module,exports){
 'use strict';"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -68692,7 +68692,7 @@ function CordovaProperty(target, key, descriptor) {
 }
 exports.CordovaProperty = CordovaProperty;
 
-},{"../util":425,"rxjs/Observable":426}],413:[function(require,module,exports){
+},{"../util":425,"rxjs/Observable":427}],413:[function(require,module,exports){
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -69809,6 +69809,74 @@ exports.get = get;
 
 },{}],426:[function(require,module,exports){
 "use strict";
+var Observable_1 = require('./Observable');
+var Notification = (function () {
+    function Notification(kind, value, exception) {
+        this.kind = kind;
+        this.value = value;
+        this.exception = exception;
+        this.hasValue = kind === 'N';
+    }
+    Notification.prototype.observe = function (observer) {
+        switch (this.kind) {
+            case 'N':
+                return observer.next && observer.next(this.value);
+            case 'E':
+                return observer.error && observer.error(this.exception);
+            case 'C':
+                return observer.complete && observer.complete();
+        }
+    };
+    Notification.prototype.do = function (next, error, complete) {
+        var kind = this.kind;
+        switch (kind) {
+            case 'N':
+                return next && next(this.value);
+            case 'E':
+                return error && error(this.exception);
+            case 'C':
+                return complete && complete();
+        }
+    };
+    Notification.prototype.accept = function (nextOrObserver, error, complete) {
+        if (nextOrObserver && typeof nextOrObserver.next === 'function') {
+            return this.observe(nextOrObserver);
+        }
+        else {
+            return this.do(nextOrObserver, error, complete);
+        }
+    };
+    Notification.prototype.toObservable = function () {
+        var kind = this.kind;
+        switch (kind) {
+            case 'N':
+                return Observable_1.Observable.of(this.value);
+            case 'E':
+                return Observable_1.Observable.throw(this.exception);
+            case 'C':
+                return Observable_1.Observable.empty();
+        }
+    };
+    Notification.createNext = function (value) {
+        if (typeof value !== 'undefined') {
+            return new Notification('N', value);
+        }
+        return this.undefinedValueNotification;
+    };
+    Notification.createError = function (err) {
+        return new Notification('E', undefined, err);
+    };
+    Notification.createComplete = function () {
+        return this.completeNotification;
+    };
+    Notification.completeNotification = new Notification('C');
+    Notification.undefinedValueNotification = new Notification('N', undefined);
+    return Notification;
+}());
+exports.Notification = Notification;
+
+},{"./Observable":427}],427:[function(require,module,exports){
+"use strict";
 var root_1 = require('./util/root');
 var SymbolShim_1 = require('./util/SymbolShim');
 var toSubscriber_1 = require('./util/toSubscriber');
@@ -69932,7 +70000,7 @@ var Observable = (function () {
 }());
 exports.Observable = Observable;
 
-},{"./util/SymbolShim":446,"./util/errorObject":447,"./util/root":451,"./util/toSubscriber":453,"./util/tryCatch":454}],427:[function(require,module,exports){
+},{"./util/SymbolShim":451,"./util/errorObject":452,"./util/root":457,"./util/toSubscriber":459,"./util/tryCatch":460}],428:[function(require,module,exports){
 "use strict";
 exports.empty = {
     isUnsubscribed: true,
@@ -69941,7 +70009,7 @@ exports.empty = {
     complete: function () { }
 };
 
-},{}],428:[function(require,module,exports){
+},{}],429:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -70139,7 +70207,7 @@ var SubjectObservable = (function (_super) {
     return SubjectObservable;
 }(Observable_1.Observable));
 
-},{"./Observable":426,"./Subscriber":429,"./Subscription":430,"./subject/SubjectSubscription":442,"./symbol/rxSubscriber":443,"./util/ObjectUnsubscribedError":445,"./util/throwError":452}],429:[function(require,module,exports){
+},{"./Observable":427,"./Subscriber":430,"./Subscription":431,"./subject/SubjectSubscription":447,"./symbol/rxSubscriber":448,"./util/ObjectUnsubscribedError":450,"./util/throwError":458}],430:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -70332,7 +70400,7 @@ var SafeSubscriber = (function (_super) {
     return SafeSubscriber;
 }(Subscriber));
 
-},{"./Observer":427,"./Subscription":430,"./symbol/rxSubscriber":443,"./util/isFunction":449}],430:[function(require,module,exports){
+},{"./Observer":428,"./Subscription":431,"./symbol/rxSubscriber":448,"./util/isFunction":455}],431:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -70453,37 +70521,31 @@ var UnsubscriptionError = (function (_super) {
 }(Error));
 exports.UnsubscriptionError = UnsubscriptionError;
 
-},{"./util/errorObject":447,"./util/isArray":448,"./util/isFunction":449,"./util/isObject":450,"./util/tryCatch":454}],431:[function(require,module,exports){
+},{"./util/errorObject":452,"./util/isArray":453,"./util/isFunction":455,"./util/isObject":456,"./util/tryCatch":460}],432:[function(require,module,exports){
+"use strict";
+var Observable_1 = require('../../Observable');
+var delay_1 = require('../../operator/delay');
+Observable_1.Observable.prototype.delay = delay_1.delay;
+
+},{"../../Observable":427,"../../operator/delay":437}],433:[function(require,module,exports){
 "use strict";
 var Observable_1 = require('../../Observable');
 var distinctUntilChanged_1 = require('../../operator/distinctUntilChanged');
 Observable_1.Observable.prototype.distinctUntilChanged = distinctUntilChanged_1.distinctUntilChanged;
 
-},{"../../Observable":426,"../../operator/distinctUntilChanged":437}],432:[function(require,module,exports){
-"use strict";
-var Observable_1 = require('../../Observable');
-var filter_1 = require('../../operator/filter');
-Observable_1.Observable.prototype.filter = filter_1.filter;
-
-},{"../../Observable":426,"../../operator/filter":438}],433:[function(require,module,exports){
-"use strict";
-var Observable_1 = require('../../Observable');
-var first_1 = require('../../operator/first');
-Observable_1.Observable.prototype.first = first_1.first;
-
-},{"../../Observable":426,"../../operator/first":439}],434:[function(require,module,exports){
+},{"../../Observable":427,"../../operator/distinctUntilChanged":438}],434:[function(require,module,exports){
 "use strict";
 var Observable_1 = require('../../Observable');
 var map_1 = require('../../operator/map');
 Observable_1.Observable.prototype.map = map_1.map;
 
-},{"../../Observable":426,"../../operator/map":440}],435:[function(require,module,exports){
+},{"../../Observable":427,"../../operator/map":439}],435:[function(require,module,exports){
 "use strict";
 var Observable_1 = require('../../Observable');
 var toPromise_1 = require('../../operator/toPromise');
 Observable_1.Observable.prototype.toPromise = toPromise_1.toPromise;
 
-},{"../../Observable":426,"../../operator/toPromise":441}],436:[function(require,module,exports){
+},{"../../Observable":427,"../../operator/toPromise":440}],436:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -70576,7 +70638,106 @@ function dispatchError(_a) {
     }
 }
 
-},{"../Observable":426,"../util/root":451}],437:[function(require,module,exports){
+},{"../Observable":427,"../util/root":457}],437:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var asap_1 = require('../scheduler/asap');
+var isDate_1 = require('../util/isDate');
+var Subscriber_1 = require('../Subscriber');
+var Notification_1 = require('../Notification');
+/**
+ * Returns an Observable that delays the emission of items from the source Observable
+ * by a given timeout or until a given Date.
+ * @param {number|Date} delay the timeout value or date until which the emission of the source items is delayed.
+ * @param {Scheduler} [scheduler] the Scheduler to use for managing the timers that handle the timeout for each item.
+ * @returns {Observable} an Observable that delays the emissions of the source Observable by the specified timeout or Date.
+ */
+function delay(delay, scheduler) {
+    if (scheduler === void 0) { scheduler = asap_1.asap; }
+    var absoluteDelay = isDate_1.isDate(delay);
+    var delayFor = absoluteDelay ? (+delay - scheduler.now()) : Math.abs(delay);
+    return this.lift(new DelayOperator(delayFor, scheduler));
+}
+exports.delay = delay;
+var DelayOperator = (function () {
+    function DelayOperator(delay, scheduler) {
+        this.delay = delay;
+        this.scheduler = scheduler;
+    }
+    DelayOperator.prototype.call = function (subscriber) {
+        return new DelaySubscriber(subscriber, this.delay, this.scheduler);
+    };
+    return DelayOperator;
+}());
+var DelaySubscriber = (function (_super) {
+    __extends(DelaySubscriber, _super);
+    function DelaySubscriber(destination, delay, scheduler) {
+        _super.call(this, destination);
+        this.delay = delay;
+        this.scheduler = scheduler;
+        this.queue = [];
+        this.active = false;
+        this.errored = false;
+    }
+    DelaySubscriber.dispatch = function (state) {
+        var source = state.source;
+        var queue = source.queue;
+        var scheduler = state.scheduler;
+        var destination = state.destination;
+        while (queue.length > 0 && (queue[0].time - scheduler.now()) <= 0) {
+            queue.shift().notification.observe(destination);
+        }
+        if (queue.length > 0) {
+            var delay_1 = Math.max(0, queue[0].time - scheduler.now());
+            this.schedule(state, delay_1);
+        }
+        else {
+            source.active = false;
+        }
+    };
+    DelaySubscriber.prototype._schedule = function (scheduler) {
+        this.active = true;
+        this.add(scheduler.schedule(DelaySubscriber.dispatch, this.delay, {
+            source: this, destination: this.destination, scheduler: scheduler
+        }));
+    };
+    DelaySubscriber.prototype.scheduleNotification = function (notification) {
+        if (this.errored === true) {
+            return;
+        }
+        var scheduler = this.scheduler;
+        var message = new DelayMessage(scheduler.now() + this.delay, notification);
+        this.queue.push(message);
+        if (this.active === false) {
+            this._schedule(scheduler);
+        }
+    };
+    DelaySubscriber.prototype._next = function (value) {
+        this.scheduleNotification(Notification_1.Notification.createNext(value));
+    };
+    DelaySubscriber.prototype._error = function (err) {
+        this.errored = true;
+        this.queue = [];
+        this.destination.error(err);
+    };
+    DelaySubscriber.prototype._complete = function () {
+        this.scheduleNotification(Notification_1.Notification.createComplete());
+    };
+    return DelaySubscriber;
+}(Subscriber_1.Subscriber));
+var DelayMessage = (function () {
+    function DelayMessage(time, notification) {
+        this.time = time;
+        this.notification = notification;
+    }
+    return DelayMessage;
+}());
+
+},{"../Notification":426,"../Subscriber":430,"../scheduler/asap":446,"../util/isDate":454}],438:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -70640,166 +70801,7 @@ var DistinctUntilChangedSubscriber = (function (_super) {
     return DistinctUntilChangedSubscriber;
 }(Subscriber_1.Subscriber));
 
-},{"../Subscriber":429,"../util/errorObject":447,"../util/tryCatch":454}],438:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = require('../Subscriber');
-/**
- * Similar to the well-known `Array.prototype.filter` method, this operator filters values down to a set
- * allowed by a `select` function
- *
- * @param {Function} select a function that is used to select the resulting values
- *  if it returns `true`, the value is emitted, if `false` the value is not passed to the resulting observable
- * @param {any} [thisArg] an optional argument to determine the value of `this` in the `select` function
- * @returns {Observable} an observable of values allowed by the select function
- */
-function filter(select, thisArg) {
-    return this.lift(new FilterOperator(select, thisArg));
-}
-exports.filter = filter;
-var FilterOperator = (function () {
-    function FilterOperator(select, thisArg) {
-        this.select = select;
-        this.thisArg = thisArg;
-    }
-    FilterOperator.prototype.call = function (subscriber) {
-        return new FilterSubscriber(subscriber, this.select, this.thisArg);
-    };
-    return FilterOperator;
-}());
-var FilterSubscriber = (function (_super) {
-    __extends(FilterSubscriber, _super);
-    function FilterSubscriber(destination, select, thisArg) {
-        _super.call(this, destination);
-        this.select = select;
-        this.thisArg = thisArg;
-        this.count = 0;
-        this.select = select;
-    }
-    // the try catch block below is left specifically for
-    // optimization and perf reasons. a tryCatcher is not necessary here.
-    FilterSubscriber.prototype._next = function (value) {
-        var result;
-        try {
-            result = this.select.call(this.thisArg, value, this.count++);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        if (result) {
-            this.destination.next(value);
-        }
-    };
-    return FilterSubscriber;
-}(Subscriber_1.Subscriber));
-
-},{"../Subscriber":429}],439:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = require('../Subscriber');
-var EmptyError_1 = require('../util/EmptyError');
-/**
- * Returns an Observable that emits the first item of the source Observable that matches the specified condition.
- * Throws an error if matching element is not found.
- * @param {function} predicate function called with each item to test for condition matching.
- * @returns {Observable} an Observable of the first item that matches the condition.
- */
-function first(predicate, resultSelector, defaultValue) {
-    return this.lift(new FirstOperator(predicate, resultSelector, defaultValue, this));
-}
-exports.first = first;
-var FirstOperator = (function () {
-    function FirstOperator(predicate, resultSelector, defaultValue, source) {
-        this.predicate = predicate;
-        this.resultSelector = resultSelector;
-        this.defaultValue = defaultValue;
-        this.source = source;
-    }
-    FirstOperator.prototype.call = function (observer) {
-        return new FirstSubscriber(observer, this.predicate, this.resultSelector, this.defaultValue, this.source);
-    };
-    return FirstOperator;
-}());
-var FirstSubscriber = (function (_super) {
-    __extends(FirstSubscriber, _super);
-    function FirstSubscriber(destination, predicate, resultSelector, defaultValue, source) {
-        _super.call(this, destination);
-        this.predicate = predicate;
-        this.resultSelector = resultSelector;
-        this.defaultValue = defaultValue;
-        this.source = source;
-        this.index = 0;
-        this.hasCompleted = false;
-    }
-    FirstSubscriber.prototype._next = function (value) {
-        var index = this.index++;
-        if (this.predicate) {
-            this._tryPredicate(value, index);
-        }
-        else {
-            this._emit(value, index);
-        }
-    };
-    FirstSubscriber.prototype._tryPredicate = function (value, index) {
-        var result;
-        try {
-            result = this.predicate(value, index, this.source);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        if (result) {
-            this._emit(value, index);
-        }
-    };
-    FirstSubscriber.prototype._emit = function (value, index) {
-        if (this.resultSelector) {
-            this._tryResultSelector(value, index);
-            return;
-        }
-        this._emitFinal(value);
-    };
-    FirstSubscriber.prototype._tryResultSelector = function (value, index) {
-        var result;
-        try {
-            result = this.resultSelector(value, index);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        this._emitFinal(result);
-    };
-    FirstSubscriber.prototype._emitFinal = function (value) {
-        var destination = this.destination;
-        destination.next(value);
-        destination.complete();
-        this.hasCompleted = true;
-    };
-    FirstSubscriber.prototype._complete = function () {
-        var destination = this.destination;
-        if (!this.hasCompleted && typeof this.defaultValue !== 'undefined') {
-            destination.next(this.defaultValue);
-            destination.complete();
-        }
-        else if (!this.hasCompleted) {
-            destination.error(new EmptyError_1.EmptyError);
-        }
-    };
-    return FirstSubscriber;
-}(Subscriber_1.Subscriber));
-
-},{"../Subscriber":429,"../util/EmptyError":444}],440:[function(require,module,exports){
+},{"../Subscriber":430,"../util/errorObject":452,"../util/tryCatch":460}],439:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -70858,7 +70860,7 @@ var MapSubscriber = (function (_super) {
     return MapSubscriber;
 }(Subscriber_1.Subscriber));
 
-},{"../Subscriber":429}],441:[function(require,module,exports){
+},{"../Subscriber":430}],440:[function(require,module,exports){
 "use strict";
 var root_1 = require('../util/root');
 function toPromise(PromiseCtor) {
@@ -70881,7 +70883,215 @@ function toPromise(PromiseCtor) {
 }
 exports.toPromise = toPromise;
 
-},{"../util/root":451}],442:[function(require,module,exports){
+},{"../util/root":457}],441:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var Immediate_1 = require('../util/Immediate');
+var FutureAction_1 = require('./FutureAction');
+var AsapAction = (function (_super) {
+    __extends(AsapAction, _super);
+    function AsapAction() {
+        _super.apply(this, arguments);
+    }
+    AsapAction.prototype._schedule = function (state, delay) {
+        if (delay === void 0) { delay = 0; }
+        if (delay > 0) {
+            return _super.prototype._schedule.call(this, state, delay);
+        }
+        this.delay = delay;
+        this.state = state;
+        var scheduler = this.scheduler;
+        scheduler.actions.push(this);
+        if (!scheduler.scheduledId) {
+            scheduler.scheduledId = Immediate_1.Immediate.setImmediate(function () {
+                scheduler.scheduledId = null;
+                scheduler.flush();
+            });
+        }
+        return this;
+    };
+    AsapAction.prototype._unsubscribe = function () {
+        var scheduler = this.scheduler;
+        var scheduledId = scheduler.scheduledId, actions = scheduler.actions;
+        _super.prototype._unsubscribe.call(this);
+        if (actions.length === 0) {
+            scheduler.active = false;
+            if (scheduledId != null) {
+                scheduler.scheduledId = null;
+                Immediate_1.Immediate.clearImmediate(scheduledId);
+            }
+        }
+    };
+    return AsapAction;
+}(FutureAction_1.FutureAction));
+exports.AsapAction = AsapAction;
+
+},{"../util/Immediate":449,"./FutureAction":443}],442:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var AsapAction_1 = require('./AsapAction');
+var QueueScheduler_1 = require('./QueueScheduler');
+var AsapScheduler = (function (_super) {
+    __extends(AsapScheduler, _super);
+    function AsapScheduler() {
+        _super.apply(this, arguments);
+    }
+    AsapScheduler.prototype.scheduleNow = function (work, state) {
+        return new AsapAction_1.AsapAction(this, work).schedule(state);
+    };
+    return AsapScheduler;
+}(QueueScheduler_1.QueueScheduler));
+exports.AsapScheduler = AsapScheduler;
+
+},{"./AsapAction":441,"./QueueScheduler":445}],443:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var root_1 = require('../util/root');
+var Subscription_1 = require('../Subscription');
+var FutureAction = (function (_super) {
+    __extends(FutureAction, _super);
+    function FutureAction(scheduler, work) {
+        _super.call(this);
+        this.scheduler = scheduler;
+        this.work = work;
+    }
+    FutureAction.prototype.execute = function () {
+        if (this.isUnsubscribed) {
+            throw new Error('How did did we execute a canceled Action?');
+        }
+        this.work(this.state);
+    };
+    FutureAction.prototype.schedule = function (state, delay) {
+        if (delay === void 0) { delay = 0; }
+        if (this.isUnsubscribed) {
+            return this;
+        }
+        return this._schedule(state, delay);
+    };
+    FutureAction.prototype._schedule = function (state, delay) {
+        var _this = this;
+        if (delay === void 0) { delay = 0; }
+        this.delay = delay;
+        this.state = state;
+        var id = this.id;
+        if (id != null) {
+            this.id = undefined;
+            root_1.root.clearTimeout(id);
+        }
+        this.id = root_1.root.setTimeout(function () {
+            _this.id = null;
+            var scheduler = _this.scheduler;
+            scheduler.actions.push(_this);
+            scheduler.flush();
+        }, delay);
+        return this;
+    };
+    FutureAction.prototype._unsubscribe = function () {
+        var _a = this, id = _a.id, scheduler = _a.scheduler;
+        var actions = scheduler.actions;
+        var index = actions.indexOf(this);
+        if (id != null) {
+            this.id = null;
+            root_1.root.clearTimeout(id);
+        }
+        if (index !== -1) {
+            actions.splice(index, 1);
+        }
+        this.work = null;
+        this.state = null;
+        this.scheduler = null;
+    };
+    return FutureAction;
+}(Subscription_1.Subscription));
+exports.FutureAction = FutureAction;
+
+},{"../Subscription":431,"../util/root":457}],444:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var FutureAction_1 = require('./FutureAction');
+var QueueAction = (function (_super) {
+    __extends(QueueAction, _super);
+    function QueueAction() {
+        _super.apply(this, arguments);
+    }
+    QueueAction.prototype._schedule = function (state, delay) {
+        if (delay === void 0) { delay = 0; }
+        if (delay > 0) {
+            return _super.prototype._schedule.call(this, state, delay);
+        }
+        this.delay = delay;
+        this.state = state;
+        var scheduler = this.scheduler;
+        scheduler.actions.push(this);
+        scheduler.flush();
+        return this;
+    };
+    return QueueAction;
+}(FutureAction_1.FutureAction));
+exports.QueueAction = QueueAction;
+
+},{"./FutureAction":443}],445:[function(require,module,exports){
+"use strict";
+var QueueAction_1 = require('./QueueAction');
+var FutureAction_1 = require('./FutureAction');
+var QueueScheduler = (function () {
+    function QueueScheduler() {
+        this.active = false;
+        this.actions = [];
+        this.scheduledId = null;
+    }
+    QueueScheduler.prototype.now = function () {
+        return Date.now();
+    };
+    QueueScheduler.prototype.flush = function () {
+        if (this.active || this.scheduledId) {
+            return;
+        }
+        this.active = true;
+        var actions = this.actions;
+        for (var action = void 0; action = actions.shift();) {
+            action.execute();
+        }
+        this.active = false;
+    };
+    QueueScheduler.prototype.schedule = function (work, delay, state) {
+        if (delay === void 0) { delay = 0; }
+        return (delay <= 0) ?
+            this.scheduleNow(work, state) :
+            this.scheduleLater(work, delay, state);
+    };
+    QueueScheduler.prototype.scheduleNow = function (work, state) {
+        return new QueueAction_1.QueueAction(this, work).schedule(state);
+    };
+    QueueScheduler.prototype.scheduleLater = function (work, delay, state) {
+        return new FutureAction_1.FutureAction(this, work).schedule(state, delay);
+    };
+    return QueueScheduler;
+}());
+exports.QueueScheduler = QueueScheduler;
+
+},{"./FutureAction":443,"./QueueAction":444}],446:[function(require,module,exports){
+"use strict";
+var AsapScheduler_1 = require('./AsapScheduler');
+exports.asap = new AsapScheduler_1.AsapScheduler();
+
+},{"./AsapScheduler":442}],447:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -70917,7 +71127,7 @@ var SubjectSubscription = (function (_super) {
 }(Subscription_1.Subscription));
 exports.SubjectSubscription = SubjectSubscription;
 
-},{"../Subscription":430}],443:[function(require,module,exports){
+},{"../Subscription":431}],448:[function(require,module,exports){
 "use strict";
 var SymbolShim_1 = require('../util/SymbolShim');
 /**
@@ -70928,24 +71138,217 @@ var SymbolShim_1 = require('../util/SymbolShim');
  */
 exports.rxSubscriber = SymbolShim_1.SymbolShim.for('rxSubscriber');
 
-},{"../util/SymbolShim":446}],444:[function(require,module,exports){
+},{"../util/SymbolShim":451}],449:[function(require,module,exports){
+/**
+Some credit for this helper goes to http://github.com/YuzuJS/setImmediate
+*/
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var EmptyError = (function (_super) {
-    __extends(EmptyError, _super);
-    function EmptyError() {
-        _super.call(this, 'no elements in sequence');
-        this.name = 'EmptyError';
+var root_1 = require('./root');
+var ImmediateDefinition = (function () {
+    function ImmediateDefinition(root) {
+        this.root = root;
+        if (root.setImmediate && typeof root.setImmediate === 'function') {
+            this.setImmediate = root.setImmediate.bind(root);
+            this.clearImmediate = root.clearImmediate.bind(root);
+        }
+        else {
+            this.nextHandle = 1;
+            this.tasksByHandle = {};
+            this.currentlyRunningATask = false;
+            // Don't get fooled by e.g. browserify environments.
+            if (this.canUseProcessNextTick()) {
+                // For Node.js before 0.9
+                this.setImmediate = this.createProcessNextTickSetImmediate();
+            }
+            else if (this.canUsePostMessage()) {
+                // For non-IE10 modern browsers
+                this.setImmediate = this.createPostMessageSetImmediate();
+            }
+            else if (this.canUseMessageChannel()) {
+                // For web workers, where supported
+                this.setImmediate = this.createMessageChannelSetImmediate();
+            }
+            else if (this.canUseReadyStateChange()) {
+                // For IE 6–8
+                this.setImmediate = this.createReadyStateChangeSetImmediate();
+            }
+            else {
+                // For older browsers
+                this.setImmediate = this.createSetTimeoutSetImmediate();
+            }
+            var ci = function clearImmediate(handle) {
+                delete clearImmediate.instance.tasksByHandle[handle];
+            };
+            ci.instance = this;
+            this.clearImmediate = ci;
+        }
     }
-    return EmptyError;
-}(Error));
-exports.EmptyError = EmptyError;
+    ImmediateDefinition.prototype.identify = function (o) {
+        return this.root.Object.prototype.toString.call(o);
+    };
+    ImmediateDefinition.prototype.canUseProcessNextTick = function () {
+        return this.identify(this.root.process) === '[object process]';
+    };
+    ImmediateDefinition.prototype.canUseMessageChannel = function () {
+        return Boolean(this.root.MessageChannel);
+    };
+    ImmediateDefinition.prototype.canUseReadyStateChange = function () {
+        var document = this.root.document;
+        return Boolean(document && 'onreadystatechange' in document.createElement('script'));
+    };
+    ImmediateDefinition.prototype.canUsePostMessage = function () {
+        var root = this.root;
+        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+        // where `root.postMessage` means something completely different and can't be used for this purpose.
+        if (root.postMessage && !root.importScripts) {
+            var postMessageIsAsynchronous_1 = true;
+            var oldOnMessage = root.onmessage;
+            root.onmessage = function () {
+                postMessageIsAsynchronous_1 = false;
+            };
+            root.postMessage('', '*');
+            root.onmessage = oldOnMessage;
+            return postMessageIsAsynchronous_1;
+        }
+        return false;
+    };
+    // This function accepts the same arguments as setImmediate, but
+    // returns a function that requires no arguments.
+    ImmediateDefinition.prototype.partiallyApplied = function (handler) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        var fn = function result() {
+            var _a = result, handler = _a.handler, args = _a.args;
+            if (typeof handler === 'function') {
+                handler.apply(undefined, args);
+            }
+            else {
+                (new Function('' + handler))();
+            }
+        };
+        fn.handler = handler;
+        fn.args = args;
+        return fn;
+    };
+    ImmediateDefinition.prototype.addFromSetImmediateArguments = function (args) {
+        this.tasksByHandle[this.nextHandle] = this.partiallyApplied.apply(undefined, args);
+        return this.nextHandle++;
+    };
+    ImmediateDefinition.prototype.createProcessNextTickSetImmediate = function () {
+        var fn = function setImmediate() {
+            var instance = setImmediate.instance;
+            var handle = instance.addFromSetImmediateArguments(arguments);
+            instance.root.process.nextTick(instance.partiallyApplied(instance.runIfPresent, handle));
+            return handle;
+        };
+        fn.instance = this;
+        return fn;
+    };
+    ImmediateDefinition.prototype.createPostMessageSetImmediate = function () {
+        // Installs an event handler on `global` for the `message` event: see
+        // * https://developer.mozilla.org/en/DOM/window.postMessage
+        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
+        var root = this.root;
+        var messagePrefix = 'setImmediate$' + root.Math.random() + '$';
+        var onGlobalMessage = function globalMessageHandler(event) {
+            var instance = globalMessageHandler.instance;
+            if (event.source === root &&
+                typeof event.data === 'string' &&
+                event.data.indexOf(messagePrefix) === 0) {
+                instance.runIfPresent(+event.data.slice(messagePrefix.length));
+            }
+        };
+        onGlobalMessage.instance = this;
+        root.addEventListener('message', onGlobalMessage, false);
+        var fn = function setImmediate() {
+            var _a = setImmediate, messagePrefix = _a.messagePrefix, instance = _a.instance;
+            var handle = instance.addFromSetImmediateArguments(arguments);
+            instance.root.postMessage(messagePrefix + handle, '*');
+            return handle;
+        };
+        fn.instance = this;
+        fn.messagePrefix = messagePrefix;
+        return fn;
+    };
+    ImmediateDefinition.prototype.runIfPresent = function (handle) {
+        // From the spec: 'Wait until any invocations of this algorithm started before this one have completed.'
+        // So if we're currently running a task, we'll need to delay this invocation.
+        if (this.currentlyRunningATask) {
+            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+            // 'too much recursion' error.
+            this.root.setTimeout(this.partiallyApplied(this.runIfPresent, handle), 0);
+        }
+        else {
+            var task = this.tasksByHandle[handle];
+            if (task) {
+                this.currentlyRunningATask = true;
+                try {
+                    task();
+                }
+                finally {
+                    this.clearImmediate(handle);
+                    this.currentlyRunningATask = false;
+                }
+            }
+        }
+    };
+    ImmediateDefinition.prototype.createMessageChannelSetImmediate = function () {
+        var _this = this;
+        var channel = new this.root.MessageChannel();
+        channel.port1.onmessage = function (event) {
+            var handle = event.data;
+            _this.runIfPresent(handle);
+        };
+        var fn = function setImmediate() {
+            var _a = setImmediate, channel = _a.channel, instance = _a.instance;
+            var handle = instance.addFromSetImmediateArguments(arguments);
+            channel.port2.postMessage(handle);
+            return handle;
+        };
+        fn.channel = channel;
+        fn.instance = this;
+        return fn;
+    };
+    ImmediateDefinition.prototype.createReadyStateChangeSetImmediate = function () {
+        var fn = function setImmediate() {
+            var instance = setImmediate.instance;
+            var root = instance.root;
+            var doc = root.document;
+            var html = doc.documentElement;
+            var handle = instance.addFromSetImmediateArguments(arguments);
+            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+            var script = doc.createElement('script');
+            script.onreadystatechange = function () {
+                instance.runIfPresent(handle);
+                script.onreadystatechange = null;
+                html.removeChild(script);
+                script = null;
+            };
+            html.appendChild(script);
+            return handle;
+        };
+        fn.instance = this;
+        return fn;
+    };
+    ImmediateDefinition.prototype.createSetTimeoutSetImmediate = function () {
+        var fn = function setImmediate() {
+            var instance = setImmediate.instance;
+            var handle = instance.addFromSetImmediateArguments(arguments);
+            instance.root.setTimeout(instance.partiallyApplied(instance.runIfPresent, handle), 0);
+            return handle;
+        };
+        fn.instance = this;
+        return fn;
+    };
+    return ImmediateDefinition;
+}());
+exports.ImmediateDefinition = ImmediateDefinition;
+exports.Immediate = new ImmediateDefinition(root_1.root);
 
-},{}],445:[function(require,module,exports){
+},{"./root":457}],450:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -70966,7 +71369,7 @@ var ObjectUnsubscribedError = (function (_super) {
 }(Error));
 exports.ObjectUnsubscribedError = ObjectUnsubscribedError;
 
-},{}],446:[function(require,module,exports){
+},{}],451:[function(require,module,exports){
 "use strict";
 var root_1 = require('./root');
 function polyfillSymbol(root) {
@@ -71036,30 +71439,37 @@ function ensureObservable(Symbol) {
 exports.ensureObservable = ensureObservable;
 exports.SymbolShim = polyfillSymbol(root_1.root);
 
-},{"./root":451}],447:[function(require,module,exports){
+},{"./root":457}],452:[function(require,module,exports){
 "use strict";
 // typeof any so that it we don't have to cast when comparing a result to the error object
 exports.errorObject = { e: {} };
 
-},{}],448:[function(require,module,exports){
+},{}],453:[function(require,module,exports){
 "use strict";
 exports.isArray = Array.isArray || (function (x) { return x && typeof x.length === 'number'; });
 
-},{}],449:[function(require,module,exports){
+},{}],454:[function(require,module,exports){
+"use strict";
+function isDate(value) {
+    return value instanceof Date && !isNaN(+value);
+}
+exports.isDate = isDate;
+
+},{}],455:[function(require,module,exports){
 "use strict";
 function isFunction(x) {
     return typeof x === 'function';
 }
 exports.isFunction = isFunction;
 
-},{}],450:[function(require,module,exports){
+},{}],456:[function(require,module,exports){
 "use strict";
 function isObject(x) {
     return x != null && typeof x === 'object';
 }
 exports.isObject = isObject;
 
-},{}],451:[function(require,module,exports){
+},{}],457:[function(require,module,exports){
 (function (global){
 "use strict";
 var objectTypes = {
@@ -71081,12 +71491,12 @@ if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === fre
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],452:[function(require,module,exports){
+},{}],458:[function(require,module,exports){
 "use strict";
 function throwError(e) { throw e; }
 exports.throwError = throwError;
 
-},{}],453:[function(require,module,exports){
+},{}],459:[function(require,module,exports){
 "use strict";
 var Subscriber_1 = require('../Subscriber');
 var rxSubscriber_1 = require('../symbol/rxSubscriber');
@@ -71103,7 +71513,7 @@ function toSubscriber(nextOrObserver, error, complete) {
 }
 exports.toSubscriber = toSubscriber;
 
-},{"../Subscriber":429,"../symbol/rxSubscriber":443}],454:[function(require,module,exports){
+},{"../Subscriber":430,"../symbol/rxSubscriber":448}],460:[function(require,module,exports){
 "use strict";
 var errorObject_1 = require('./errorObject');
 var tryCatchTarget;
@@ -71123,9 +71533,9 @@ function tryCatch(fn) {
 exports.tryCatch = tryCatch;
 ;
 
-},{"./errorObject":447}],455:[function(require,module,exports){
+},{"./errorObject":452}],461:[function(require,module,exports){
 
-},{}]},{},[11,455])
+},{}]},{},[11,461])
 
 
 //# sourceMappingURL=app.bundle.js.map
