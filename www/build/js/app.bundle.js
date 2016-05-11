@@ -376,7 +376,6 @@ var PizzaApp = (function () {
                 .statusChanged
                 .distinctUntilChanged()
                 .subscribe(function (data) {
-                console.log(data);
                 var toastText = data.type === 'add' ? 'Erfolgreich hinzugefügt' : 'Erfolgreich entfernt';
                 var toast = ionic_angular_1.Toast.create({
                     message: toastText,

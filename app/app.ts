@@ -38,7 +38,6 @@ class PizzaApp {
         .statusChanged
         .distinctUntilChanged()
         .subscribe(data => {
-          console.log(data);
           const toastText = data.type === 'add' ? 'Erfolgreich hinzugefügt' : 'Erfolgreich entfernt';
 
           const toast = Toast.create({
