@@ -1,5 +1,5 @@
 import {NavController, Page, Refresher} from 'ionic-angular';
-import {Input, OnInit, Output, EventEmitter} from 'angular2/core';
+import {Input, OnInit, Output} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
 
 import {DetailPage} from '../+detail/detail.page';
@@ -16,7 +16,6 @@ export class OrderPage implements OnInit {
   loading: boolean;
   pizzaSource: Observable<Pizza[]>;
   @Input() search: string;
-  @Output() cartItemAdded = new EventEmitter<number>();
 
   constructor(
     private pizzaService: PizzaService,
@@ -56,7 +55,5 @@ export class OrderPage implements OnInit {
     $event.stopPropagation();
 
     this.cartService.addCartItem(pizza);
-
-    this.cartItemAdded.emit(5);
   }
 }

@@ -1,4 +1,4 @@
-import {Injectable} from 'angular2/core';
+import {EventEmitter, Injectable} from 'angular2/core';
 
 import {Pizza} from '../../shared/index';
 import {CartItem} from './cart-item.model';
@@ -6,6 +6,7 @@ import {CartItem} from './cart-item.model';
 @Injectable()
 export class CartService {
   cart: CartItem[] = [];
+  public statusChanged = new EventEmitter<{type: string; totalCount: number}>();
 
   getCart(): CartItem[] {
     return this.cart;
@@ -16,10 +17,18 @@ export class CartService {
       name: pizza.name,
       price: pizza.price
     });
+    this.statusChanged.emit({
+      type: 'add',
+      totalCount: this.cart.length
+    });
   };
 
   removeCartItem(index): void {
     this.cart.splice(index, 1);
+    this.statusChanged.emit({
+      type: 'remove',
+      totalCount: this.cart && this.cart.length ? this.cart.length : 0
+    });
   };
 
   calcTotalSum(): number {

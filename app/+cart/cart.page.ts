@@ -1,4 +1,4 @@
-import {AfterViewInit, EventEmitter, OnInit, Output} from 'angular2/core';
+import {AfterViewInit, OnInit, Output} from 'angular2/core';
 import {Alert, NavController, Page} from 'ionic-angular';
 
 import {CartItem, CartService} from './shared/index';
@@ -8,8 +8,7 @@ import {CartItem, CartService} from './shared/index';
   templateUrl: 'build/+cart/cart.page.html'
 })
 export class CartPage implements OnInit {
-  @Output() cartItemRemoved = new EventEmitter<number>();
-  cart;
+  cart: CartItem[] = [];
   alertDelay = 200;
 
   constructor(private cartService: CartService, private nav: NavController) {}
@@ -39,6 +38,5 @@ export class CartPage implements OnInit {
 
   removeFromCart(index: number): void {
     this.cartService.removeCartItem(index);
-    this.cartItemRemoved.emit(this.cart.length);
   }
 }

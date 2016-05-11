@@ -1,5 +1,7 @@
-import {App, IonicApp, Modal, NavController, Platform} from 'ionic-angular';
+import {App, IonicApp, Modal, NavController, Platform, Toast} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/last';
 
 import {AboutModalPage} from './about/index';
 import {OrderPage} from './+order/index';
@@ -19,7 +21,8 @@ class PizzaApp {
 
   constructor(
     private app: IonicApp,
-    private platform: Platform
+    private platform: Platform,
+    private cartService: CartService
   ) {
     this.initializeApp();
     this.pages = {
@@ -31,6 +34,22 @@ class PizzaApp {
   initializeApp() {
     this.platform.ready().then(() => {
       this.nav = this.app.getComponent('nav');
+
+      this.cartService
+        .statusChanged
+        .distinctUntilChanged()
+        .subscribe(data => {
+          console.log(data);
+          const toastText = data.type === 'add' ? 'Erfolgreich hinzugefügt' : 'Erfolgreich entfernt';
+
+          const toast = Toast.create({
+            message: toastText,
+            duration: 3000
+          });
+
+          this.nav.present(toast);
+        });
+
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
