@@ -43,7 +43,7 @@ class PizzaApp {
 
           const toast = Toast.create({
             message: toastText,
-            duration: 3000
+            duration: 1000
           });
 
           this.nav.present(toast);

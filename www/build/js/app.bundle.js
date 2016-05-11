@@ -380,7 +380,7 @@ var PizzaApp = (function () {
                 var toastText = data.type === 'add' ? 'Erfolgreich hinzugefügt' : 'Erfolgreich entfernt';
                 var toast = ionic_angular_1.Toast.create({
                     message: toastText,
-                    duration: 3000
+                    duration: 1000
                 });
                 _this.nav.present(toast);
             });
