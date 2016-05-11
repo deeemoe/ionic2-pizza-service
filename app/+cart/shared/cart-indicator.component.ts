@@ -7,7 +7,11 @@ import {CartService} from './cart.service';
   selector: 'cart-indicator',
   template: `
     <button clear (click)="handleClick($event)">
-      <ion-icon ios="ios-cart-outline" [attr.danger]="itemRemoved ? '' : null" [attr.favorite]="itemAdded ? '' : null" md="ios-cart-outline" wp="ios-cart-outline">
+      <ion-icon
+        name="cart"
+        [attr.danger]="itemRemoved ? '' : null"
+        [attr.favorite]="itemAdded ? '' : null"
+      >
       </ion-icon>
     </button>
   `

@@ -111,7 +111,7 @@ var CartIndicatorComponent = (function () {
     CartIndicatorComponent = __decorate([
         core_1.Component({
             selector: 'cart-indicator',
-            template: "\n    <button clear (click)=\"handleClick($event)\">\n      <ion-icon ios=\"ios-cart-outline\" [attr.danger]=\"itemRemoved ? '' : null\" [attr.favorite]=\"itemAdded ? '' : null\" md=\"ios-cart-outline\" wp=\"ios-cart-outline\">\n      </ion-icon>\n    </button>\n  "
+            template: "\n    <button clear (click)=\"handleClick($event)\">\n      <ion-icon\n        name=\"cart\"\n        [attr.danger]=\"itemRemoved ? '' : null\"\n        [attr.favorite]=\"itemAdded ? '' : null\"\n      >\n      </ion-icon>\n    </button>\n  "
         }), 
         __metadata('design:paramtypes', [cart_service_1.CartService])
     ], CartIndicatorComponent);
@@ -361,6 +361,7 @@ var PizzaApp = (function () {
         this.platform = platform;
         this.cartService = cartService;
         this.rootPage = index_2.OrderPage;
+        this.cartItemCount = 0;
         this.pages = {};
         this.initializeApp();
         this.pages = {
@@ -371,11 +372,13 @@ var PizzaApp = (function () {
     PizzaApp.prototype.initializeApp = function () {
         var _this = this;
         this.platform.ready().then(function () {
+            // Get the global navigation controller
             _this.nav = _this.app.getComponent('nav');
+            // subscribe to cart changes
             _this.cartService
                 .statusChanged
-                .distinctUntilChanged()
                 .subscribe(function (data) {
+                _this.cartItemCount = data.totalCount;
                 var toastText = data.type === 'add' ? 'Erfolgreich hinzugefügt' : 'Erfolgreich entfernt';
                 var toast = ionic_angular_1.Toast.create({
                     message: toastText,
@@ -405,7 +408,9 @@ var PizzaApp = (function () {
         ionic_angular_1.App({
             templateUrl: 'build/app.html',
             providers: [index_4.CartService, index_3.PizzaService],
-            config: {} // http://ionicframework.com/docs/v2/api/config/Config/
+            config: {
+                backButtonText: ''
+            } // http://ionicframework.com/docs/v2/api/config/Config/
         }), 
         __metadata('design:paramtypes', [ionic_angular_1.IonicApp, ionic_angular_1.Platform, index_4.CartService])
     ], PizzaApp);

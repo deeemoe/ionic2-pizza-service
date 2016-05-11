@@ -33,7 +33,7 @@
     <ion-item (click)="openPizza(pizza.id)" *ngFor="#pizza of pizzas | pizzaSearch:search">
       <ion-row class="row-no-padding row-center">
         <ion-col width-10 text-left>{{pizza.id}}</ion-col>
-        <ion-col width-60><h2>{{pizza.name}}</h2><p>{{pizza.price | currency}}</p></ion-col>
+        <ion-col width-60><h2>{{pizza.name}}</h2><p>{{pizza.price | currency:'EUR'}}</p></ion-col>
         <ion-col width-10>
           <ion-icon name="information-circle" large></ion-icon>
         </ion-col>

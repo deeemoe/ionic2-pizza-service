@@ -17,7 +17,7 @@
     <ion-item>
       <span primary clear item-right>
         <ion-icon balanced></ion-icon>
-        {{pizza.price ? (pizza.price | currency) : 'kostenlos'}}
+        {{pizza.price ? (pizza.price | currency:'EUR') : 'kostenlos'}}
       </span>
     </ion-item>
   </ion-card>

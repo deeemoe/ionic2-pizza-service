@@ -11,10 +11,13 @@ import {CartPage, CartService} from './+cart/index';
 @App({
   templateUrl: 'build/app.html',
   providers: [CartService, PizzaService],
-  config: {} // http://ionicframework.com/docs/v2/api/config/Config/
+  config: {
+    backButtonText: ''
+  } // http://ionicframework.com/docs/v2/api/config/Config/
 })
 class PizzaApp {
   rootPage: any = OrderPage;
+  cartItemCount = 0;
   private nav: NavController;
   private pages = {};
 
@@ -32,12 +35,14 @@ class PizzaApp {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      // Get the global navigation controller
       this.nav = this.app.getComponent('nav');
-
+      // subscribe to cart changes
       this.cartService
         .statusChanged
-        .distinctUntilChanged()
         .subscribe(data => {
+          this.cartItemCount = data.totalCount;
+
           const toastText = data.type === 'add' ? 'Erfolgreich hinzugefügt' : 'Erfolgreich entfernt';
 
           const toast = Toast.create({

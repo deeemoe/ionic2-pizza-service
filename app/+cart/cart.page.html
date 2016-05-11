@@ -10,7 +10,7 @@
     <ion-item-sliding *ngFor="#item of cart">
       <ion-item>
         <h2>{{item.name}}</h2>
-        <p>{{item.price | currency}}</p>
+        <p>{{item.price | currency:'EUR'}}</p>
         <ion-item-options>
           <button assertive block (click)="removeFromCart($index)">
             <ion-icon name="trash"></ion-icon>
@@ -31,7 +31,7 @@
       <b>Gesamt:</b>
     </ion-col>
     <ion-col width-50 text-right>
-      <b>{{calcTotalSum() | currency}}</b>
+      <b>{{calcTotalSum() | currency:'EUR'}}</b>
     </ion-col>
   </ion-row>
 </ion-toolbar>
