@@ -1,7 +1,6 @@
 import {App, IonicApp, Modal, NavController, Platform, Toast} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/last';
 
 import {AboutModalPage} from './about/index';
 import {OrderPage} from './+order/index';
