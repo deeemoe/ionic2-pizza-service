@@ -4,10 +4,10 @@ import {CartService} from './cart.service';
 
 
 @Component({
-  selector: 'cart-item',
+  selector: 'cart-indicator',
   template: `
-    <button (click)="handleClick($event)">
-      <ion-icon ios="ios-cart-outline" md="ios-cart-outline" wp="ios-cart-outline">
+    <button clear (click)="handleClick($event)">
+      <ion-icon ios="ios-cart-outline" [attr.danger]="itemRemoved ? '' : null" [attr.favorite]="itemAdded ? '' : null" md="ios-cart-outline" wp="ios-cart-outline">
       </ion-icon>
     </button>
   `
@@ -30,7 +30,7 @@ export class CartIndicatorComponent implements OnInit {
       .subscribe(data => {
         this.totalCount = data.totalCount;
 
-        if (status === 'add') {
+        if (data.type === 'add') {
           this.itemAdded = true;
         } else {
           this.itemRemoved = true;

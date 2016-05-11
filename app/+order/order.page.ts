@@ -4,11 +4,12 @@ import {Observable} from 'rxjs/Observable';
 
 import {DetailPage} from '../+detail/detail.page';
 
-import {CartService} from '../+cart/index';
+import {CartIndicatorComponent, CartPage, CartService} from '../+cart/index';
 import {Pizza, PizzaSearchPipe, PizzaService} from '../shared/index';
 
 @Page({
   templateUrl: 'build/+order/order.page.html',
+  directives: [CartIndicatorComponent],
   pipes: [PizzaSearchPipe]
 })
 export class OrderPage implements OnInit {
@@ -49,6 +50,10 @@ export class OrderPage implements OnInit {
     this.nav.push(DetailPage, {
       id: id
     });
+  }
+
+  openCart() {
+    this.nav.push(CartPage);
   }
 
   addToCart($event, pizza: Pizza) {
