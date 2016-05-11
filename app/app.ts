@@ -1,10 +1,9 @@
 import {App, IonicApp, Platform} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {OrderPage} from './+order/order.page';
-import {CartPage} from './+cart/cart.page';
 
 import {PizzaService} from './shared/index';
-import {CartService} from './+cart/index';
+import {CartPage, CartService} from './+cart/index';
 
 @App({
   templateUrl: 'build/app.html',
@@ -15,13 +14,16 @@ class PizzaApp {
   rootPage: any = OrderPage;
   pages: Array<{title: string, component: any}>
 
-  constructor(private app: IonicApp, private platform: Platform) {
+  constructor(
+    private app: IonicApp,
+    private platform: Platform
+  ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Getting Started', component: OrderPage },
-      { title: 'List', component: CartPage }
+      { title: 'Bestellen', component: OrderPage },
+      { title: 'Warenkorb', component: CartPage }
     ];
   }
 

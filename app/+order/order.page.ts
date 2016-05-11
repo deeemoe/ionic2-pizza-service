@@ -18,7 +18,11 @@ export class OrderPage implements OnInit {
   @Input() search: string;
   @Output() cartItemAdded = new EventEmitter<number>();
 
-  constructor(private pizzaService: PizzaService, private cartService: CartService, private nav: NavController) {}
+  constructor(
+    private pizzaService: PizzaService,
+    private cartService: CartService,
+    private nav: NavController
+  ) {}
 
   private loadPizzas(refresher?: Refresher) {
     if (!refresher) {
@@ -34,7 +38,7 @@ export class OrderPage implements OnInit {
   }
 
   ngOnInit() {
-    this.pizzaSource = this.pizzaService.getPizza();
+    this.pizzaSource = this.pizzaService.getPizzas();
     this.loadPizzas();
   }
 

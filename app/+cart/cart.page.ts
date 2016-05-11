@@ -1,35 +1,44 @@
-import {Page, NavController, NavParams} from 'ionic-angular';
-import {DetailPage} from '../+detail/detail.page';
+import {AfterViewInit, EventEmitter, OnInit, Output} from 'angular2/core';
+import {Alert, NavController, Page} from 'ionic-angular';
+
+import {CartItem, CartService} from './shared/index';
 
 
 @Page({
   templateUrl: 'build/+cart/cart.page.html'
 })
-export class CartPage {
-  selectedItem: any;
-  icons: string[];
-  items: Array<{title: string, note: string, icon: string}>;
+export class CartPage implements OnInit {
+  @Output() cartItemRemoved = new EventEmitter<number>();
+  cart;
+  alertDelay = 200;
 
-  constructor(private nav: NavController, navParams: NavParams) {
-    // If we navigated to this page, we will have an item available as a nav param
-    this.selectedItem = navParams.get('item');
+  constructor(private cartService: CartService, private nav: NavController) {}
 
-    this.icons = ['flask', 'wifi', 'beer', 'football', 'basketball', 'paper-plane',
-    'american-football', 'boat', 'bluetooth', 'build'];
-
-    this.items = [];
-    for(let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
+  ngOnInit(): void {
+    this.cart = this.cartService.getCart();
   }
 
-  itemTapped(event, item) {
-    this.nav.push(DetailPage, {
-      item: item
-    });
+  onPageDidEnter(): void {
+    if (this.cart.length) {
+      return;
+    }
+
+    setTimeout(() => {
+      let alert = Alert.create({
+        title: '<b>Dein Warenkorb ist leer!</b>',
+        subTitle: 'Füge zuerst Produkte aus Unserem Angebot zu Deinem Warenkorb hinzu.',
+        buttons: ['OK']
+      });
+      this.nav.present(alert);
+    }, this.alertDelay);
+  }
+
+  calcTotalSum() {
+    return this.cartService.calcTotalSum();
+  }
+
+  removeFromCart(index: number): void {
+    this.cartService.removeCartItem(index);
+    this.cartItemRemoved.emit(this.cart.length);
   }
 }

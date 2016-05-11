@@ -21,4 +21,18 @@ export class CartService {
   removeCartItem(index): void {
     this.cart.splice(index, 1);
   };
+
+  calcTotalSum(): number {
+    let sum = 0;
+
+    if (!this.cart || !this.cart.length) {
+      return sum;
+    }
+
+    for (let i = 0; i < this.cart.length; i = i + 1) {
+      sum = sum + this.cart[i].price;
+    }
+
+    return sum;
+  }
 }
