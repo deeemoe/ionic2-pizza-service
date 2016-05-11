@@ -20,7 +20,7 @@ export class CartIndicatorComponent implements OnInit {
   itemAdded = false;
   itemRemoved = false;
   totalCount = 0;
-  statusDelay = 1000;
+  statusDelay = 500;
   @Output() wasClicked = new EventEmitter();
 
   constructor(private cartService: CartService) {

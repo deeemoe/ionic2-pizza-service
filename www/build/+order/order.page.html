@@ -31,18 +31,11 @@
       <ion-icon name="beer"></ion-icon> Angebot
     </ion-item-divider>
     <ion-item (click)="openPizza(pizza.id)" *ngFor="#pizza of pizzas | pizzaSearch:search">
-      <ion-row class="row-no-padding row-center">
-        <ion-col width-10 text-left>{{pizza.id}}</ion-col>
-        <ion-col width-60><h2>{{pizza.name}}</h2><p>{{pizza.price | currency:'EUR'}}</p></ion-col>
-        <ion-col width-10>
-          <ion-icon name="information-circle" large></ion-icon>
-        </ion-col>
-        <ion-col width-20 text-right>
-          <button block (click)="addToCart($event, pizza)">
-            <ion-icon name="cart" large></ion-icon>
-          </button>
-        </ion-col>
-      </ion-row>
+        <span item-left text-left>{{pizza.id}}</span>
+        <h2>{{pizza.name}}</h2><p>{{pizza.price | currency:'EUR'}}</p>
+        <button item-right (click)="addToCart($event, pizza)" default>
+          <ion-icon name="cart"></ion-icon>
+        </button>
     </ion-item>
   </ion-item-group>
 </ion-content>

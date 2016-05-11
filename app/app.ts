@@ -18,6 +18,7 @@ import {CartPage, CartService} from './+cart/index';
 class PizzaApp {
   rootPage: any = OrderPage;
   cartItemCount = 0;
+  toastDuration = 500;
   private nav: NavController;
   private pages = {};
 
@@ -47,7 +48,7 @@ class PizzaApp {
 
           const toast = Toast.create({
             message: toastText,
-            duration: 1000
+            duration: this.toastDuration
           });
 
           this.nav.present(toast);

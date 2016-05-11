@@ -7,17 +7,17 @@
 
 <ion-content>
   <ion-list *ngIf="cart.length">
-    <ion-item-sliding *ngFor="#item of cart">
+    <ion-item-sliding *ngFor="#item of cart; #index=index">
       <ion-item>
         <h2>{{item.name}}</h2>
         <p>{{item.price | currency:'EUR'}}</p>
-        <ion-item-options>
-          <button assertive block (click)="removeFromCart($index)">
-            <ion-icon name="trash"></ion-icon>
-            Delete
-          </button>
-        </ion-item-options>
       </ion-item>
+      <ion-item-options>
+        <button (click)="removeFromCart(index)" assertive default>
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
     </ion-item-sliding>
   </ion-list>
   <p *ngIf="!cart.length" padding text-center>

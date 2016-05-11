@@ -16,24 +16,20 @@ var CartPage = (function () {
         this.cartService = cartService;
         this.nav = nav;
         this.cart = [];
-        this.alertDelay = 200;
     }
     CartPage.prototype.ngOnInit = function () {
         this.cart = this.cartService.getCart();
     };
     CartPage.prototype.onPageDidEnter = function () {
-        var _this = this;
         if (this.cart.length) {
             return;
         }
-        setTimeout(function () {
-            var alert = ionic_angular_1.Alert.create({
-                title: '<b>Dein Warenkorb ist leer!</b>',
-                subTitle: 'Füge zuerst Produkte aus Unserem Angebot zu Deinem Warenkorb hinzu.',
-                buttons: ['OK']
-            });
-            _this.nav.present(alert);
-        }, this.alertDelay);
+        var alert = ionic_angular_1.Alert.create({
+            title: '<b>Dein Warenkorb ist leer!</b>',
+            subTitle: 'Füge zuerst Produkte aus Unserem Angebot zu Deinem Warenkorb hinzu.',
+            buttons: ['OK']
+        });
+        this.nav.present(alert);
     };
     CartPage.prototype.calcTotalSum = function () {
         return this.cartService.calcTotalSum();
@@ -78,7 +74,7 @@ var CartIndicatorComponent = (function () {
         this.itemAdded = false;
         this.itemRemoved = false;
         this.totalCount = 0;
-        this.statusDelay = 1000;
+        this.statusDelay = 500;
         this.wasClicked = new core_1.EventEmitter();
     }
     CartIndicatorComponent.prototype.ngOnInit = function () {
@@ -362,6 +358,7 @@ var PizzaApp = (function () {
         this.cartService = cartService;
         this.rootPage = index_2.OrderPage;
         this.cartItemCount = 0;
+        this.toastDuration = 500;
         this.pages = {};
         this.initializeApp();
         this.pages = {
@@ -382,7 +379,7 @@ var PizzaApp = (function () {
                 var toastText = data.type === 'add' ? 'Erfolgreich hinzugefügt' : 'Erfolgreich entfernt';
                 var toast = ionic_angular_1.Toast.create({
                     message: toastText,
-                    duration: 1000
+                    duration: _this.toastDuration
                 });
                 _this.nav.present(toast);
             });
