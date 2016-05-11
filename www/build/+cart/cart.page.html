@@ -7,15 +7,20 @@
 
 <ion-content>
   <ion-list *ngIf="cart.length">
-    <ion-item *ngFor="#item of cart">
-      <h2>{{item.name}}</h2>
-      <p>{{item.price | currency}}</p>
-      <ion-option-button class="button-assertive" ng-click="removeFromCart($index)">
-        <i class="icon ion-minus-circled"></i>
-      </ion-option-button>
-    </ion-item>
+    <ion-item-sliding *ngFor="#item of cart">
+      <ion-item>
+        <h2>{{item.name}}</h2>
+        <p>{{item.price | currency}}</p>
+        <ion-item-options>
+          <button assertive block (click)="removeFromCart($index)">
+            <ion-icon name="trash"></ion-icon>
+            Delete
+          </button>
+        </ion-item-options>
+      </ion-item>
+    </ion-item-sliding>
   </ion-list>
-  <p *ngIf="!cart.length" class="padding text-center">
+  <p *ngIf="!cart.length" padding text-center>
     Dein Warenkorb ist nocht leer!
   </p>
 </ion-content>
@@ -25,7 +30,7 @@
     <ion-col width-50>
       <b>Gesamt:</b>
     </ion-col>
-    <ion-col width-50 class="text-right">
+    <ion-col width-50 text-right>
       <b>{{calcTotalSum() | currency}}</b>
     </ion-col>
   </ion-row>

@@ -19,8 +19,7 @@ export class DetailPage implements OnInit {
   ngOnInit(): void {
     this.pizzaService
       .getPizza(this.navParams.get('id'))
-      .then(pizza => {
-        this.pizza = pizza
-      });
+      .toPromise()
+      .then(pizza => this.pizza = pizza);
   }
 }

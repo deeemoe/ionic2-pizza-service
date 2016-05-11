@@ -145,9 +145,8 @@ var DetailPage = (function () {
         var _this = this;
         this.pizzaService
             .getPizza(this.navParams.get('id'))
-            .then(function (pizza) {
-            _this.pizza = pizza;
-        });
+            .toPromise()
+            .then(function (pizza) { return _this.pizza = pizza; });
     };
     DetailPage = __decorate([
         ionic_angular_1.Page({
@@ -365,8 +364,7 @@ var PizzaService = (function () {
         return this.http
             .get('assets/pizza.json')
             .map(function (res) { return res.json(); })
-            .toPromise()
-            .then(function (pizzas) {
+            .map(function (pizzas) {
             for (var _i = 0, pizzas_1 = pizzas; _i < pizzas_1.length; _i++) {
                 var pizza = pizzas_1[_i];
                 if (pizza.id === id) {

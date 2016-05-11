@@ -13,8 +13,8 @@
   </ion-searchbar>
 </ion-toolbar>
 
-<ion-content padding class="order">
-  <div [hidden]="!loading" class="text-center padding">
+<ion-content>
+  <div [hidden]="!loading" text-center padding>
     <ion-spinner></ion-spinner>
   </div>
   <ion-refresher (refresh)="doRefresh($event)">
@@ -23,25 +23,23 @@
     >
     </ion-refresher-content>
   </ion-refresher>
-  <ion-list [hidden]="loading">
-    <ion-item class="item-divider">
+  <ion-item-group [hidden]="loading">
+    <ion-item-divider>
       <ion-icon name="beer"></ion-icon> Angebot
-    </ion-item>
+    </ion-item-divider>
     <ion-item (click)="openPizza(pizza.id)" *ngFor="#pizza of pizzas | pizzaSearch:search">
       <ion-row class="row-no-padding row-center">
-        <ion-col width-10 class="text-left">{{pizza.id}}</ion-col>
+        <ion-col width-10 text-left>{{pizza.id}}</ion-col>
         <ion-col width-60><h2>{{pizza.name}}</h2><p>{{pizza.price | currency}}</p></ion-col>
         <ion-col width-10>
-          <ion-icon large name="information"></ion-icon>
+          <ion-icon name="information-circle" large></ion-icon>
         </ion-col>
-        <ion-col width-20 class="text-right">
+        <ion-col width-20 text-right>
           <button block (click)="addToCart($event, pizza)">
-            <ion-icon name="cart"></ion-icon>
+            <ion-icon name="cart" large></ion-icon>
           </button>
         </ion-col>
       </ion-row>
     </ion-item>
-  </ion-list>
+  </ion-item-group>
 </ion-content>
-
- <!--ui-sref="base.detail({ id: pizza.id })"-->

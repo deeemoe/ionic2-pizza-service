@@ -18,12 +18,11 @@ export class PizzaService {
       .map((res: Response) => res.json());
   }
 
-  getPizza(id): Promise<Pizza> {
+  getPizza(id): Observable<Pizza> {
     return this.http
       .get('assets/pizza.json')
       .map((res: Response) => res.json())
-      .toPromise()
-      .then((pizzas: Pizza[]) => {
+      .map((pizzas: Pizza[]) => {
         for (let pizza of pizzas) {
           if (pizza.id === id) {
             return pizza;
