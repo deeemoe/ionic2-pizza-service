@@ -1,6 +1,8 @@
-import {App, IonicApp, Platform} from 'ionic-angular';
+import {App, IonicApp, Modal, NavController, Platform} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
-import {OrderPage} from './+order/order.page';
+
+import {AboutModalPage} from './about/index';
+import {OrderPage} from './+order/index';
 
 import {PizzaService} from './shared/index';
 import {CartPage, CartService} from './+cart/index';
@@ -12,33 +14,41 @@ import {CartPage, CartService} from './+cart/index';
 })
 class PizzaApp {
   rootPage: any = OrderPage;
-  pages: Array<{title: string, component: any}>
+  private nav: NavController;
+  private pages = {};
 
   constructor(
     private app: IonicApp,
     private platform: Platform
   ) {
     this.initializeApp();
-
-    // used for an example of ngFor and navigation
-    this.pages = [
-      { title: 'Bestellen', component: OrderPage },
-      { title: 'Warenkorb', component: CartPage }
-    ];
+    this.pages = {
+      'OrderPage': OrderPage,
+      'CartPage': CartPage
+    };
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.nav = this.app.getComponent('nav');
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
     });
   }
 
-  openPage(page) {
+  openAboutModal() {
+    const modal = Modal.create(AboutModalPage);
+    this.nav.present(modal)
+  }
+
+  openPage(pageName) {
+    const component = this.pages[pageName];
+    if (!component) {
+      return;
+    }
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-    let nav = this.app.getComponent('nav');
-    nav.setRoot(page.component);
+    this.nav.setRoot(component);
   }
 }
