@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from 'angular2/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 import {CartService} from './cart.service';
 

@@ -1,5 +1,6 @@
+import {Input, OnInit, Output} from '@angular/core';
+
 import {NavController, Page, Refresher} from 'ionic-angular';
-import {Input, OnInit, Output} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
 
 import {DetailPage} from '../+detail/detail.page';

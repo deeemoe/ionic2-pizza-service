@@ -1,4 +1,5 @@
-import {OnInit} from 'angular2/core';
+import {OnInit} from '@angular/core';
+
 import {Page, NavController, NavParams} from 'ionic-angular';
 import 'rxjs/add/operator/toPromise';
 

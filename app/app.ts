@@ -1,4 +1,6 @@
-import {App, IonicApp, Modal, NavController, Platform, Toast} from 'ionic-angular';
+import {ViewChild} from '@angular/core';
+
+import {App, IonicApp, Modal, Nav, Platform, Toast} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import 'rxjs/add/operator/distinctUntilChanged';
 
@@ -19,8 +21,8 @@ class PizzaApp {
   rootPage: any = OrderPage;
   cartItemCount = 0;
   toastDuration = 500;
-  private nav: NavController;
   private pages = {};
+  @ViewChild(Nav) nav: Nav;
 
   constructor(
     private app: IonicApp,
@@ -36,8 +38,6 @@ class PizzaApp {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Get the global navigation controller
-      this.nav = this.app.getComponent('nav');
       // subscribe to cart changes
       this.cartService
         .statusChanged

@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from 'angular2/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 import {Pizza} from './pizza.model';
 
@@ -6,18 +6,17 @@ import {Pizza} from './pizza.model';
   name: 'pizzaSearch'
 })
 export class PizzaSearchPipe implements PipeTransform {
-  transform(pizzas:Pizza[], args) : any {
+  transform(pizzas:Pizza[], searchString: string) : any {
     let matches: Pizza[] = [];
-    const searchString = args[0];
 
     if (!searchString) {
-        return pizzas;
+      return pizzas;
     }
 
     pizzas.forEach(function (pizza) {
-        if (pizza.name.match(new RegExp(searchString, 'i'))) {
-            matches.push(pizza);
-        }
+      if (pizza.name.match(new RegExp(searchString, 'i'))) {
+        matches.push(pizza);
+      }
     });
 
     return matches;

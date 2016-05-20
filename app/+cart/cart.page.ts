@@ -1,4 +1,5 @@
-import {AfterViewInit, OnInit, Output} from 'angular2/core';
+import {AfterViewInit, OnInit, Output} from '@angular/core';
+
 import {Alert, NavController, Page} from 'ionic-angular';
 
 import {CartItem, CartService} from './shared/index';

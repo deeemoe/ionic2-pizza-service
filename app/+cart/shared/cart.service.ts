@@ -1,4 +1,4 @@
-import {EventEmitter, Injectable} from 'angular2/core';
+import {EventEmitter, Injectable} from '@angular/core';
 
 import {Pizza} from '../../shared/index';
 import {CartItem} from './cart-item.model';
