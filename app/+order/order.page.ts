@@ -25,26 +25,21 @@ export class OrderPage implements OnInit {
     private nav: NavController
   ) {}
 
-  private loadPizzas(refresher?: Refresher) {
-    if (!refresher) {
-      this.loading = true;
-    }
-    this.pizzaSource.subscribe(pizzas => {
+  ngOnInit() {
+    this.loading = true;
+    const subscription = this.pizzaService.getPizzas().subscribe(pizzas => {
       this.pizzas = pizzas;
       this.loading = false;
-      if (refresher) {
-        refresher.complete();
-      }
+      subscription.unsubscribe();
     }, () => this.loading = false);
   }
 
-  ngOnInit() {
-    this.pizzaSource = this.pizzaService.getPizzas();
-    this.loadPizzas();
-  }
-
   doRefresh(refresher: Refresher) {
-    this.loadPizzas(refresher);
+    const subscription = this.pizzaService.getPizzas().subscribe(pizzas => {
+      this.pizzas = pizzas;
+      refresher.complete()
+      subscription.unsubscribe();
+    }, () => refresher.complete());
   }
 
   openPizza(id: number) {
