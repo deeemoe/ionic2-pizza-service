@@ -1,14 +1,14 @@
-import {AfterViewInit, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, OnInit, Output} from '@angular/core';
 
-import {Alert, NavController, Page} from 'ionic-angular';
+import {Alert, NavController} from 'ionic-angular';
 
 import {CartItem, CartService} from './shared/index';
 
 
-@Page({
-  templateUrl: 'build/+cart/cart.page.html'
+@Component({
+  templateUrl: 'build/+cart/cart.component.html'
 })
-export class CartPage implements OnInit {
+export class CartComponent implements OnInit {
   cart: CartItem[] = [];
 
   constructor(private cartService: CartService, private nav: NavController) {}
@@ -17,7 +17,7 @@ export class CartPage implements OnInit {
     this.cart = this.cartService.getCart();
   }
 
-  onPageDidEnter(): void {
+  ionicViewDidEnter(): void {
     if (this.cart.length) {
       return;
     }

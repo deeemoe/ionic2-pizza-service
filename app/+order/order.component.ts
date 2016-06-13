@@ -1,19 +1,19 @@
-import {Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 
-import {NavController, Page, Refresher} from 'ionic-angular';
+import {NavController, Refresher} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 
-import {DetailPage} from '../+detail/detail.page';
+import {DetailComponent} from '../+detail/detail.component';
 
-import {CartIndicatorComponent, CartPage, CartService} from '../+cart/index';
+import {CartIndicatorComponent, CartComponent, CartService} from '../+cart/index';
 import {Pizza, PizzaSearchPipe, PizzaService} from '../shared/index';
 
-@Page({
-  templateUrl: 'build/+order/order.page.html',
+@Component({
+  templateUrl: 'build/+order/order.component.html',
   directives: [CartIndicatorComponent],
   pipes: [PizzaSearchPipe]
 })
-export class OrderPage implements OnInit {
+export class OrderComponent implements OnInit {
   pizzas: Pizza[] = [];
   loading: boolean;
   pizzaSource: Observable<Pizza[]>;
@@ -43,13 +43,13 @@ export class OrderPage implements OnInit {
   }
 
   openPizza(id: number) {
-    this.nav.push(DetailPage, {
+    this.nav.push(DetailComponent, {
       id: id
     });
   }
 
   openCart() {
-    this.nav.push(CartPage);
+    this.nav.push(CartComponent);
   }
 
   addToCart($event, pizza: Pizza) {

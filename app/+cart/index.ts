@@ -1,2 +1,2 @@
-export * from './cart.page';
+export * from './cart.component';
 export * from './shared/index';

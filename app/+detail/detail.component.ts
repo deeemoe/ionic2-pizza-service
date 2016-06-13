@@ -1,14 +1,14 @@
-import {OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import {Page, NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams} from 'ionic-angular';
 import 'rxjs/add/operator/toPromise';
 
 import {Pizza, PizzaService} from '../shared/index';
 
-@Page({
-  templateUrl: 'build/+detail/detail.page.html'
+@Component({
+  templateUrl: 'build/+detail/detail.component.html'
 })
-export class DetailPage implements OnInit {
+export class DetailComponent implements OnInit {
   pizza: Pizza;
 
   constructor(

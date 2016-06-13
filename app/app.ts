@@ -1,38 +1,34 @@
-import {ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 
-import {App, IonicApp, Modal, Nav, Platform, Toast} from 'ionic-angular';
+import {App, ionicBootstrap, Modal, Nav, Platform, Toast} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import {AboutModalPage} from './about/index';
-import {OrderPage} from './+order/index';
+import {AboutModalComponent} from './about/index';
+import {OrderComponent} from './+order/index';
 
 import {PizzaService} from './shared/index';
-import {CartPage, CartService} from './+cart/index';
+import {CartComponent, CartService} from './+cart/index';
 
-@App({
-  templateUrl: 'build/app.html',
-  providers: [CartService, PizzaService],
-  config: {
-    backButtonText: ''
-  } // http://ionicframework.com/docs/v2/api/config/Config/
+@Component({
+  templateUrl: 'build/app.html'
 })
-class PizzaApp {
-  rootPage: any = OrderPage;
+class PizzaAppComponent {
+  rootPage: any = OrderComponent;
   cartItemCount = 0;
   toastDuration = 500;
   private pages = {};
   @ViewChild(Nav) nav: Nav;
 
   constructor(
-    private app: IonicApp,
+    private app: App,
     private platform: Platform,
     private cartService: CartService
   ) {
     this.initializeApp();
     this.pages = {
-      'OrderPage': OrderPage,
-      'CartPage': CartPage
+      'OrderPage': OrderComponent,
+      'CartPage': CartComponent
     };
   }
 
@@ -61,7 +57,7 @@ class PizzaApp {
   }
 
   openAboutModal() {
-    const modal = Modal.create(AboutModalPage);
+    const modal = Modal.create(AboutModalComponent);
     this.nav.present(modal)
   }
 
@@ -75,3 +71,7 @@ class PizzaApp {
     this.nav.setRoot(component);
   }
 }
+
+ionicBootstrap(PizzaAppComponent, [OrderComponent, CartService, PizzaService], {
+  backButtonText: ''
+});
