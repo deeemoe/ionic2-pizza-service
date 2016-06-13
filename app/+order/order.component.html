@@ -20,7 +20,7 @@
   <div [hidden]="!loading" text-center padding>
     <ion-spinner></ion-spinner>
   </div>
-  <ion-refresher (refresh)="doRefresh($event)">
+  <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
       pullingText="aktualisieren..."
     >

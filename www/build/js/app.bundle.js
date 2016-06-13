@@ -412,7 +412,7 @@ var PizzaAppComponent = (function () {
     ], PizzaAppComponent);
     return PizzaAppComponent;
 }());
-ionic_angular_1.ionicBootstrap(PizzaAppComponent, [index_2.OrderComponent, index_4.CartService, index_3.PizzaService], {
+ionic_angular_1.ionicBootstrap(PizzaAppComponent, [index_4.CartService, index_3.PizzaService], {
     backButtonText: ''
 });
 

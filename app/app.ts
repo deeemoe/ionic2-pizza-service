@@ -72,6 +72,6 @@ class PizzaAppComponent {
   }
 }
 
-ionicBootstrap(PizzaAppComponent, [OrderComponent, CartService, PizzaService], {
+ionicBootstrap(PizzaAppComponent, [CartService, PizzaService], {
   backButtonText: ''
 });
