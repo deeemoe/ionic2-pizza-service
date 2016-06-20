@@ -17,7 +17,7 @@ export class CartComponent implements OnInit {
     this.cart = this.cartService.getCart();
   }
 
-  ionicViewDidEnter(): void {
+  ionViewDidEnter(): void {
     if (this.cart.length) {
       return;
     }
