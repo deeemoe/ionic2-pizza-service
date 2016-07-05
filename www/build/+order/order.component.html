@@ -1,20 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Pizza <ion-icon name="pizza"></ion-icon> App</ion-title>
+    <ion-buttons end>
+      <cart-indicator (wasClicked)="openCart()"></cart-indicator>
+    </ion-buttons>
+  </ion-navbar>
 
-<ion-navbar *navbar>
-  <button menuToggle>
-    <ion-icon name="menu"></ion-icon>
-  </button>
-  <ion-title>Pizza <ion-icon name="pizza"></ion-icon> App</ion-title>
-  <ion-buttons end>
-    <cart-indicator (wasClicked)="openCart()"></cart-indicator>
-  </ion-buttons>
-</ion-navbar>
-
-<ion-toolbar>
-  <ion-searchbar
-    [(ngModel)]="search"
-  >
-  </ion-searchbar>
-</ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="search"
+    >
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content class="order">
   <div [hidden]="!loading" text-center padding>

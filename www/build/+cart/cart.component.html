@@ -1,9 +1,11 @@
-<ion-navbar *navbar>
-  <button menuToggle>
-    <ion-icon name="menu"></ion-icon>
-  </button>
-  <ion-title>Warenkorb</ion-title>
-</ion-navbar>
+<ion-header>
+  <ion-navbar>
+    <button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Warenkorb</ion-title>
+  </ion-navbar>
+</ion-header>
 
 <ion-content>
   <ion-list *ngIf="cart.length">
@@ -25,13 +27,15 @@
   </p>
 </ion-content>
 
-<ion-toolbar position="bottom">
-  <ion-row>
-    <ion-col width-50>
-      <b>Gesamt:</b>
-    </ion-col>
-    <ion-col width-50 text-right>
-      <b>{{calcTotalSum() | currency:'EUR'}}</b>
-    </ion-col>
-  </ion-row>
-</ion-toolbar>
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col width-50>
+        <b>Gesamt:</b>
+      </ion-col>
+      <ion-col width-50 text-right>
+        <b>{{calcTotalSum() | currency:'EUR'}}</b>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

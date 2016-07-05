@@ -27,7 +27,7 @@ export class CartComponent implements OnInit {
       subTitle: 'Füge zuerst Produkte aus Unserem Angebot zu Deinem Warenkorb hinzu.',
       buttons: ['OK']
     });
-    this.nav.present(alert);
+    setTimeout(() => this.nav.present(alert), 300);
   }
 
   calcTotalSum() {
